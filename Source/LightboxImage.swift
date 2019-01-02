@@ -1,5 +1,5 @@
 import UIKit
-import Imaginary
+import AsyncDisplayKit
 
 open class LightboxImage {
 
@@ -33,20 +33,20 @@ open class LightboxImage {
     self.videoURL = videoURL
   }
 
-  open func addImageTo(_ imageView: UIImageView, completion: ((UIImage?) -> Void)? = nil) -> (() -> Void)? {
+  open func addImageTo(_ imageNode: ASImageNode, completion: ((UIImage?) -> Void)? = nil) -> (() -> Void)? {
     if let image = image {
-      imageView.image = image
+      imageNode.image = image
       completion?(image)
     } else if let imageURL = imageURL {
       var cancelOperation: (() -> Void)? = nil
-      LightboxConfig.loadImage(imageView, imageURL, &cancelOperation, completion)
+      LightboxConfig.loadImage(imageNode, imageURL, &cancelOperation, completion)
       return cancelOperation
     } else if let imageClosure = imageClosure {
       let img = imageClosure()
-      imageView.image = img
+      imageNode.image = img
       completion?(img)
     } else {
-      imageView.image = nil
+      imageNode.image = nil
       completion?(nil)
     }
     return nil

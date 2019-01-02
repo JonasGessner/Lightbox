@@ -2,8 +2,31 @@ PODS:
   - Cache (5.2.0)
   - Imaginary (4.2.0):
     - Cache (~> 5.0)
-  - Lightbox (2.2.0):
+  - Lightbox (2.3.0):
     - Imaginary (~> 4.0)
+    - Texture
+  - PINCache (3.0.1-beta.6):
+    - PINCache/Arc-exception-safe (= 3.0.1-beta.6)
+    - PINCache/Core (= 3.0.1-beta.6)
+  - PINCache/Arc-exception-safe (3.0.1-beta.6):
+    - PINCache/Core
+  - PINCache/Core (3.0.1-beta.6):
+    - PINOperation (~> 1.1.0)
+  - PINOperation (1.1.1)
+  - PINRemoteImage/Core (3.0.0-beta.13):
+    - PINOperation
+  - PINRemoteImage/iOS (3.0.0-beta.13):
+    - PINRemoteImage/Core
+  - PINRemoteImage/PINCache (3.0.0-beta.13):
+    - PINCache (= 3.0.1-beta.6)
+    - PINRemoteImage/Core
+  - Texture (2.7):
+    - Texture/PINRemoteImage (= 2.7)
+  - Texture/Core (2.7)
+  - Texture/PINRemoteImage (2.7):
+    - PINRemoteImage/iOS (= 3.0.0-beta.13)
+    - PINRemoteImage/PINCache
+    - Texture/Core
 
 DEPENDENCIES:
   - Lightbox (from `../../`)
@@ -12,6 +35,10 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Cache
     - Imaginary
+    - PINCache
+    - PINOperation
+    - PINRemoteImage
+    - Texture
 
 EXTERNAL SOURCES:
   Lightbox:
@@ -20,8 +47,12 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Cache: 807c5d86d01a177f06ede9865add3aea269bbfd4
   Imaginary: dae33d06dbc2ada22f98afef5eb45cc061311a2c
-  Lightbox: af4d61903506aa3151a314daa853f7cb3ad39301
+  Lightbox: 4cf5d51c4b413252878add4476e33594cf7d5d77
+  PINCache: d195fdba255283f7e9900a55e3cced377f431f9b
+  PINOperation: a6219e6fc9db9c269eb7a7b871ac193bcf400aac
+  PINRemoteImage: d6d51c5d2adda55f1ce30c96e850b6c4ebd2856a
+  Texture: 9d7e38965cf22ccd7cd9c249dd78b3f14e70ab6c
 
 PODFILE CHECKSUM: 408ae3477507a1d4b7ff06ffb3f162eda443424f
 
-COCOAPODS: 1.6.0.beta.1
+COCOAPODS: 1.5.3

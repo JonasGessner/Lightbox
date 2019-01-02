@@ -1,4 +1,5 @@
 import UIKit
+import AsyncDisplayKit
 
 public protocol LightboxControllerPageDelegate: class {
 
@@ -94,7 +95,7 @@ open class LightboxController: UIViewController {
 
       pageDelegate?.lightboxController(self, didMoveToPage: currentPage)
 
-      if let image = pageViews[currentPage].imageView.image, dynamicBackground {
+      if let image = pageViews[currentPage].imageNode.image, dynamicBackground {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.125) {
           self.loadDynamicBackground(image)
         }
@@ -382,12 +383,12 @@ extension LightboxController: UIScrollViewDelegate {
 
 extension LightboxController: PageViewDelegate {
 
-  func remoteImageDidLoad(_ image: UIImage?, imageView: UIImageView) {
+  func remoteImageDidLoad(_ image: UIImage?, imageNode: ASImageNode) {
     guard let image = image, dynamicBackground else {
       return
     }
 
-    let imageViewFrame = imageView.convert(imageView.frame, to: view)
+    let imageViewFrame = imageNode.view.convert(imageNode.view.frame, to: view)
     guard view.frame.intersects(imageViewFrame) else {
       return
     }

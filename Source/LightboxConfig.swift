@@ -1,7 +1,7 @@
 import UIKit
 import AVKit
 import AVFoundation
-import Imaginary
+import AsyncDisplayKit
 
 public class LightboxConfig {
   /// Whether to show status bar while Lightbox is presented
@@ -18,17 +18,17 @@ public class LightboxConfig {
   }
 
   /// How to load image onto UIImageView
-  public static var loadImage: (UIImageView, URL, inout (() -> Void)?, ((UIImage?) -> Void)?) -> Void = { (imageView, imageURL, cancelOperation, completion) in
-
+  public static var loadImage: (ASImageNode, URL, inout (() -> Void)?, ((UIImage?) -> Void)?) -> Void = { (imageView, imageURL, cancelOperation, completion) in
+    fatalError()
     // Use Imaginary by default
-    imageView.setImage(url: imageURL, placeholder: nil, completion: { result in
-      switch result {
-      case .value(let image):
-        completion?(image)
-      case .error:
-        completion?(nil)
-      }
-    })
+//    imageView.setImage(url: imageURL, placeholder: nil, completion: { result in
+//      switch result {
+//      case .value(let image):
+//        completion?(image)
+//      case .error:
+//        completion?(nil)
+//      }
+//    })
   }
 
   /// Indicator is used to show while image is being fetched

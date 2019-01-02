@@ -1,22 +1,23 @@
 import UIKit
+import AsyncDisplayKit
 
 protocol PageViewDelegate: class {
 
   func pageViewDidZoom(_ pageView: PageView)
-  func remoteImageDidLoad(_ image: UIImage?, imageView: UIImageView)
+  func remoteImageDidLoad(_ image: UIImage?, imageNode: ASImageNode)
   func pageView(_ pageView: PageView, didTouchPlayButton videoURL: URL)
   func pageViewDidTouch(_ pageView: PageView)
 }
 
 class PageView: UIScrollView {
 
-  lazy var imageView: UIImageView = {
-    let imageView = UIImageView()
-    imageView.contentMode = .scaleAspectFit
-    imageView.clipsToBounds = true
-    imageView.isUserInteractionEnabled = true
+  lazy var imageNode: ASImageNode = {
+    let imageNode = ASImageNode()
+    imageNode.contentMode = .scaleAspectFit
+    imageNode.clipsToBounds = true
+    imageNode.isUserInteractionEnabled = true
 
-    return imageView
+    return imageNode
   }()
 
   lazy var playButton: UIButton = {
@@ -63,7 +64,7 @@ class PageView: UIScrollView {
   // MARK: - Configuration
 
   func configure() {
-    addSubview(imageView)
+    addSubview(imageNode.view)
 
     updatePlayButton()
 
@@ -107,7 +108,7 @@ class PageView: UIScrollView {
     cancelCurrentImageLoading?()
 
     loadingIndicator.alpha = 1
-    cancelCurrentImageLoading = self.image.addImageTo(imageView) { [weak self] image in
+    cancelCurrentImageLoading = self.image.addImageTo(imageNode) { [weak self] image in
       guard let self = self else {
         return
       }
@@ -116,7 +117,7 @@ class PageView: UIScrollView {
 
       self.isUserInteractionEnabled = true
       self.configureImageView()
-      self.pageViewDelegate?.remoteImageDidLoad(image, imageView: self.imageView)
+      self.pageViewDelegate?.remoteImageDidLoad(image, imageNode: self.imageNode)
 
       UIView.animate(withDuration: 0.4) {
         self.loadingIndicator.alpha = 0
@@ -127,7 +128,7 @@ class PageView: UIScrollView {
   // MARK: - Recognizers
 
   @objc func scrollViewDoubleTapped(_ recognizer: UITapGestureRecognizer) {
-    let pointInView = recognizer.location(in: imageView)
+    let pointInView = recognizer.location(in: imageNode.view)
     let newZoomScale = zoomScale > minimumZoomScale
       ? minimumZoomScale
       : maximumZoomScale
@@ -151,17 +152,17 @@ class PageView: UIScrollView {
   override func layoutSubviews() {
     super.layoutSubviews()
 
-    loadingIndicator.center = imageView.center
-    playButton.center = imageView.center
+    loadingIndicator.center = imageNode.view.center
+    playButton.center = imageNode.view.center
   }
 
   func configureImageView() {
-    guard let image = imageView.image else {
+    guard let image = imageNode.image else {
         centerImageView()
         return
     }
 
-    let imageViewSize = imageView.frame.size
+    let imageViewSize = imageNode.frame.size
     let imageSize = image.size
     let realImageViewSize: CGSize
 
@@ -175,14 +176,14 @@ class PageView: UIScrollView {
         height: imageViewSize.height)
     }
 
-    imageView.frame = CGRect(origin: CGPoint.zero, size: realImageViewSize)
+    imageNode.frame = CGRect(origin: CGPoint.zero, size: realImageViewSize)
 
     centerImageView()
   }
 
   func centerImageView() {
     let boundsSize = contentFrame.size
-    var imageViewFrame = imageView.frame
+    var imageViewFrame = imageNode.frame
 
     if imageViewFrame.size.width < boundsSize.width {
       imageViewFrame.origin.x = (boundsSize.width - imageViewFrame.size.width) / 2.0
@@ -196,7 +197,7 @@ class PageView: UIScrollView {
       imageViewFrame.origin.y = 0.0
     }
 
-    imageView.frame = imageViewFrame
+    imageNode.frame = imageViewFrame
   }
 
   // MARK: - Action
@@ -215,7 +216,7 @@ extension PageView: LayoutConfigurable {
   @objc func configureLayout() {
     contentFrame = frame
     contentSize = frame.size
-    imageView.frame = frame
+    imageNode.frame = frame
     zoomScale = minimumZoomScale
 
     configureImageView()
@@ -227,7 +228,7 @@ extension PageView: LayoutConfigurable {
 extension PageView: UIScrollViewDelegate {
 
   func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-    return imageView
+    return imageNode.view
   }
 
   func scrollViewDidZoom(_ scrollView: UIScrollView) {
